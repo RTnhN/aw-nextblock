@@ -19,7 +19,9 @@ def cli():
 
 @click.command()
 @click.argument('plan_file', type=click.Path(exists=True, path_type=Path))
-def start(plan_file: Path):
+@click.option('--foreground', is_flag=True, default=False,
+              help='Run watcher in the foreground (blocks the terminal).')
+def start(plan_file: Path, foreground: bool):
     """Start a new work session from a plan file"""
     click.echo(f"Loading session plan from {plan_file}")
 
@@ -41,7 +43,16 @@ def start(plan_file: Path):
         click.echo(f"Session '{session.name}' started successfully!")
         if session.current_block:
             click.echo(f"Current block: {session.current_block.name if session.current_block else 'None'}")
-            asyncio.run(watcher_async())
+            if foreground:
+                asyncio.run(watcher_async())
+            else:
+                from .background import launch_watcher_background
+                try:
+                    pid = launch_watcher_background()
+                except Exception as exc:
+                    click.echo(f"Failed to start watcher in background: {exc}", err=True)
+                    sys.exit(1)
+                click.echo(f"Watcher running in background (PID {pid}).")
     else:
         click.echo("Failed to save session state", err=True)
         sys.exit(1)

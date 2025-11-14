@@ -107,7 +107,7 @@ Durations are estimates, not limits.
 aw-nextblock start plan.yaml
 ```
 
-This creates a session file and start its aw watcher process.
+The watcher now runs in the background automatically so you can keep using the same terminal. If you prefer the previous blocking behavior (for debugging, etc.) run `aw-nextblock start --foreground plan.yaml` instead.
 
 #### 3. Work and Advance
 
@@ -217,4 +217,3 @@ verbose_logging = false
 ## Contributing
 
 Contributions welcome. Open an issue to discuss changes before submitting PRs.
-
