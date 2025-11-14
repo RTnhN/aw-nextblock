@@ -126,8 +126,15 @@ def version():
     """Show version information"""
     click.echo(f"aw-nextblock v{__version__}")
 
+@click.command(hidden=True)
+def watcher():
+    """Internal command used to run the watcher loop."""
+    asyncio.run(watcher_async())
+
+
 cli.add_command(start)
 cli.add_command(next)
 cli.add_command(status)
 cli.add_command(stop)
 cli.add_command(version)
+cli.add_command(watcher)
